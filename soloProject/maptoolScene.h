@@ -12,11 +12,11 @@
 #define GRIDY 1
 #define GRIDNUM GRIDX*GRIDY
 
-#define PALETTX 1
-#define PALETTY 1
-#define PALETTNUM PALETTX * PALETTY
+#define PALETTEX 1
+#define PALETTEY 1
+#define PALETTENUM PALETTEX * PALETTEY
 
-#define BUTTENMAX 10
+#define BUTTENMAX 20
 
 enum LAYER
 {
@@ -28,7 +28,7 @@ enum LAYER
 	LAYER_ENEMY
 };
 
-enum SETMODE
+enum INPUTMODE
 {
 	MODE_NULL,
 
@@ -59,6 +59,19 @@ enum SETMODE
 	MODE_DELET
 };
 
+enum PALETTEMODE
+{
+	MODE_TILE,
+	MODE_DECO,
+
+	MODE_BACKGROUND,
+	MODE_FRONTGROUND,
+
+	MODE_OBJECT,
+	MODE_NPC,
+	MODE_ENEMY
+};
+
 class maptoolScene : public gameNode
 {
 	typedef vector<GRID> vGrid;
@@ -74,8 +87,6 @@ class maptoolScene : public gameNode
 	typedef vector<OBJ>::iterator viObj;
 
 private:
-	image* _backGroundImage;
-
 	int _mapStage;
 
 	RECT _backGroundRect;
@@ -84,6 +95,8 @@ private:
 	RECT _miniMapCam;
 
 	bool _leftClicking;
+	vector<string> _backImgNameList;
+	vector<image*> _backImgList;
 
 	vector<string> _imgNameList;
 	vector<image*> _imgList;
@@ -131,20 +144,42 @@ private:
 
 	int _check;
 
-	vTile _copyTile;
+	vTile _vCopyTile;
+	viTile _viCopyTile;
 
-	SETMODE _setMode;
-	LAYER _layerMode;
+	INPUTMODE _inputMode;
+	LAYER _inputLayer;
+	PALETTEMODE _paletMode;
 
 	vector<RECT> _tileButten;
 
-	 _buttonRect[BUTTENMAX];
+	BUTTEN _buttonRect[BUTTENMAX];
+
+	float _inpCountDown;
+
+	int _cameraX, _cameraY;
 
 public:
 	HRESULT init();
 	void release();
 	void update();
 	void render();
+
+	void imagesetup();
+	void palettSetup();
+
+	void input();
+
+	void input_ModeChange();
+	void input_SelectMapGrid();
+	void input_AddTile();
+	void input_ClickPalet();
+	void inPut_ClickButten();
+
+	void cameraMove(int x, int y);
+
+	void save();
+	void load();
 
 	maptoolScene();
 	~maptoolScene();
